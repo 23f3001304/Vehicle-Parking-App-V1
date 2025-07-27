@@ -1,0 +1,344 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+:root {
+    --primary-color: #ff3b30;
+    --secondary-color: #343a40;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --gray-color: #6c757d;
+    --border-color: #dee2e6;
+    --accent-color: #ff6b6b;
+
+}
+
+body {
+    background-color: #f4f6f9;
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+.hidden {
+    display: none;
+}
+
+.main-content {
+    flex-grow: 1;
+    background-color: var(--light-color);
+    padding: 20px;
+    padding-top: 100px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    padding: 20px;
+    padding-top: 24px;
+    margin-bottom: 0;
+    background-color: var(--light-color);
+    position: fixed;
+    top: 0;
+    left: 250px;
+    right: 0;
+    z-index: 90;
+    transition: left 0.3s ease;
+}
+
+.header h1 {
+    font-size: 24px;
+    color: var(--dark-color);
+    margin: 0;
+    padding-left: 15px;
+}
+
+.rectangle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+}
+.add-btn, .view-btn, .delete-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.add-btn {
+    padding: 10px 15px;
+    min-width: 140px;
+}
+
+.add-btn:hover {
+    background-color: #e02e24;
+}
+
+.add-btn i {
+    position: static !important;
+    opacity: 1 !important;
+    transform: none !important;
+    margin-right: 8px !important;
+    transition: none !important;
+    width: auto !important;
+    display: inline-flex !important;
+}
+
+.add-btn:hover i {
+    transform: none !important;
+    margin-right: 8px !important;
+}
+
+.add-btn:hover span {
+    opacity: 1 !important;
+    transform: none !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+.parking-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-header h3 {
+    font-size: 18px;
+    color: var(--dark-color);
+}
+
+.edit-btn {
+    background: none;
+    border: none;
+    color: var(--gray-color);
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.edit-btn:hover {
+    color: var(--primary-color);
+    background-color: #212121 !important;
+    color: white;
+    border-color: #212121;
+    transform: translateY(-3px) rotate(8deg);
+    box-shadow: 0 5px 10px rgba(33, 33, 33, 0.1);
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: var(--dark-color);
+}
+
+.value {
+    font-weight: bold;
+}
+
+.card-footer {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-color);
+}
+
+.view-btn, .delete-btn {
+    padding: 8px 15px;
+    min-width: 110px;
+}
+
+.view-btn {
+    background-color: var(--dark-color);
+    color: white;
+}
+
+.view-btn:hover {
+    background-color: #343a40;
+}
+
+.view-btn::before {
+    background: linear-gradient(135deg, #2A7E43, #3c9d58);
+}
+
+.view-btn:hover::before {
+    background: linear-gradient(135deg, #1f6032, #2A7E43);
+}
+
+.delete-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid #ffcdd2;
+}
+
+.delete-btn:hover {
+    background-color: #e02e24;
+    color: #B71C1C;
+    transform: translateY(-3px);
+    border-color: #ef9a9a;
+    box-shadow: 0 5px 10px rgba(211, 47, 47, 0.1);
+}
+
+.delete-btn::before {
+    background: linear-gradient(90deg, #ffebee, #ffcdd2);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.btn-link {
+    text-decoration: none;
+    flex: 1;
+}
+
+.view-btn i, .delete-btn i, .add-btn i {
+    position: absolute;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+    margin: 0;
+}
+
+.view-btn span, .delete-btn span, .add-btn span {
+    transition: all 0.3s ease;
+}
+
+.view-btn:hover span, .delete-btn:hover span, .add-btn:hover span {
+    opacity: 0;
+    transform: scale(0);
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.view-btn:hover i, .delete-btn:hover i, .add-btn:hover i {
+    opacity: 1;
+    transform: scale(1.2);
+    position: static;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-icon {
+    font-size: 1rem;
+}
+
+.mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .header {
+        left: 0;
+        top: 0;
+        padding-top: 70px;
+    }
+
+    .main-content {
+        padding-top: 140px;
+        width: 100%;
+        transition: padding-left 0.3s ease;
+    }
+
+    .mobile {
+        display: block;
+        z-index: 91;
+        position: fixed;
+        width: 40px;
+        top: 15px;
+        left: 20px;
+    }
+    .view-btn i, .delete-btn i, .add-btn i {
+        position: absolute;
+        opacity: 0;
+        transform: scale(0);
+        margin: 0;
+    }
+    
+    .view-btn:active i, .delete-btn:active i, .add-btn:active i,
+    .view-btn:focus i, .delete-btn:focus i, .add-btn:focus i {
+        opacity: 1;
+        transform: scale(1.2);
+        position: static;
+    }
+    
+    .view-btn:active span, .delete-btn:active span, .add-btn:active span,
+    .view-btn:focus span, .delete-btn:focus span, .add-btn:focus span {
+        opacity: 0;
+        transform: scale(0);
+        position: absolute;
+    }
+    
+    .card-footer {
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    .view-btn, .delete-btn {
+        flex: 1;
+        justify-content: center;
+    }
+}
+@media (max-width: 480px) {
+    .No_Parking_Lot h2 {
+        font-size: 16px !important;
+    }
+    
+    .parking-lots-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .header {
+        padding-left: 15px;
+        padding-right: 15px;
+        gap: 10px;
+    }
+    
+    .header h1 {
+        font-size: 18px;
+    }
+    
+    .add-btn {
+        align-self: stretch;
+    }
+}

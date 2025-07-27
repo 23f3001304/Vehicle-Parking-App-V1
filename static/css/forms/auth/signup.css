@@ -1,0 +1,249 @@
+:root{
+    --page-title-margin-top: 1rem;
+    --page-title-margin-bottom: 5.7vh;
+    --form-container-gap: 2.5vh;
+    --form-container-margin-bottom: 0;
+    --input-group-gap: 0.6vh;
+    --input-group-margin-bottom: 0;
+    --input-container-margin-bottom: 0vh;
+    --signup-text-margin-top: 2.76vh;
+}
+
+/* Password Strength Indicator Styles - Perfectly matched to input field */
+.password-strength-container {
+    position: absolute;
+    bottom: -.1vh;
+    left: .12vh;
+    width: 100%;
+    height: 5px; /* Match the exact height shown in image */
+    background-color: #e8eaed; /* Match the light gray from image */
+    overflow: hidden;
+    z-index: 0;
+    border-bottom-left-radius: 0.625rem;
+    border-bottom-right-radius: 0.625rem;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.password-strength-indicator {
+    height: 100%;
+    width: 0;
+    background-color: #FF3B30; /* Exact red color from image */
+    transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+/* Input field adjustments to work perfectly with the indicator */
+.input-field {
+    border: none !important;
+    border-radius: 0.625rem !important;
+    background-color: #f4f4f4 !important;
+    box-shadow: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+
+
+/* Fix input focus states */
+.input-field:focus {
+    box-shadow: 0 0 0 2px rgba(2, 123, 229, 0.3) !important;
+    background-color: #ffffff !important;
+}
+
+/* Override any other styles that might interfere */
+.input-field:focus + .password-strength-container {
+    z-index: -1;
+}
+
+/* Adjusted styles for the password strength text */
+.char-counter {
+  position: absolute;
+  top: -25px;
+  right: 5px;
+  font-size: 14px;
+  color: #666;
+  font-family: 'IBM Plex Mono', monospace;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: auto;
+  
+}
+
+.password-strength-text {
+  font-size: 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  transition: color 0.3s ease-in-out;
+  margin-left: 5px; /* Space after the separator */
+}
+
+.password-strength-text.weak {
+  color: #FF3B30;
+}
+
+.password-strength-text.fair {
+  color: #FF9500;
+}
+
+.password-strength-text.good {
+  color: #FFCC00;
+}
+
+.password-strength-text.strong {
+  color: #34C759;
+}
+
+
+
+
+/* GO BACK button styling */
+#go_back {
+  position: fixed;
+  left: 40px;
+  top: 40px;
+  height: 40px;
+  min-width: 120px;
+  color: #027be5;
+  font-weight: 600;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  font-family: 'IBM Plex Mono', monospace;
+  z-index: 10;
+  overflow: hidden;
+}
+
+#go_back:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(2,123,229,0.2);
+  color: white;
+  background-color: #027be5;
+}
+
+#go_back .material-icons {
+  font-size: 18px;
+}
+
+input::placeholder{
+    position: relative;
+    top:-2px;
+    align-self: center;
+ font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .side-image {
+        display: none;
+    }
+
+    .side-container {
+        width: 100%;
+    }
+
+    .form-container {
+        gap: 3.8889vh;
+    }
+
+    .input-group {
+        gap: 2.037vh;
+    }
+    
+    #go_back {
+    left: 20px;
+    top: 11px;
+    height: 36px;
+    min-width: 100px;
+    font-size: 12px;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 576px) {
+    .form-container {
+        gap: 3.8889vh;
+    }
+
+    .input-group {
+        gap: 2.037vh;
+    }
+
+    .input-field,
+    .login-button {
+        height: 6.25vh;
+    }
+    
+    #go_back {
+    left: 15px;
+    top: 11px;
+    height: 34px;
+    min-width: 90px;
+    font-size: 11px;
+    padding: 0 12px;
+  }
+  
+  #go_back .material-icons {
+    font-size: 16px;
+  }
+}
+
+@media (max-height: 600px) {
+    .form-container {
+        gap: 2.5vh;
+    }
+
+    .input-group {
+        gap: 1.5vh;
+    }
+
+    .input-field,
+    .login-button {
+        height: 5vh;
+    }
+    
+    #go_back {
+    top: 11px;
+    height: 30px;
+    min-width: 90px;
+  }
+}
+
+
+@media (max-width: 330px) {
+    .form-container {
+        gap: 2.5vh;
+    }
+
+    .input-group {
+        gap: 1.5vh;
+    }
+
+    .input-field,
+    .login-button {
+        height: 5vh;
+    }
+    
+    #go_back {
+    position: fixed;
+    box-shadow: none !important;    
+    top: 20px;
+    left:10px;
+    height: 30px;
+    font-size: 14px;
+    min-width: 90px;
+  }
+    #go_back .material-icons {
+        font-size: 12px;
+    }
+}

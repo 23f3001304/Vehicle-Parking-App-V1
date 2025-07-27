@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Users - ParkEase Admin</title>
+    <link rel="stylesheet" href="/static/css/font.css" defer>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="stylesheet" href="/static/css/sidebar.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/toast.css">
+    <link rel="stylesheet" href="/static/css/parking_lot.css">
+    <link rel="shortcut icon" href="/static/svg/Icon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <img class="mobile" src="../static/svg/Icon.svg" alt="">
+    <div class="menu-overlay" id="menuOverlay"></div>
+    {% include 'components/notifications/toast.html' %}
+    
+    <div class="dashboard-container">
+        {% include 'components/navigation/sidebar.html' %}     
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="rectangle"></div>
+                <h1>All Registered Users</h1>
+            </div>
+            
+            <div class="parking-lots-container">
+                {% for user in users %}
+                <div class="parking-card">
+                    <div class="card-header">
+                        <div class="card-header-content">
+                            <h3>{{ user.FullName }}</h3>
+                            <div class="card-badges">
+                                <span class="occupancy-badge low">User ID: {{ user.id }}</span>
+                            </div>
+                        </div>
+                        <button class="edit-btn" title="View user details">
+                            <i class="fas fa-user"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-section">
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-envelope"></i> Email:</span>
+                                <span class="value">{{ user.email }}</span>
+                            </div>
+                            <div class="info-row" style="flex-direction: column; align-items: flex-start;" >
+                                <span class="info-label"><i class="fas fa-map-marker-alt"></i> Address:</span>
+                                <div class="value" style=" display:block !important; word-break: break-word; line-height: 1.4; margin-top: 10px;">{{ user.address or 'Not provided' }}</div>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-mail-bulk"></i> Pincode:</span>
+                                <span class="value">{{ user.pincode or 'Not provided' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    {% if not users or users|length == 0 %}
+    <div class="No_Parking_Lot"
+    style="position: fixed; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #FFF9F9;
+            z-index: -1; 
+            border-top: 1px black solid;
+            border-bottom: 1px black solid;
+            width: 100%;
+            gap:20px;
+            display: flex;
+            align-items: center;
+            justify-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-weight: 300;
+            z-index: 99;">
+        <span class="material-icons" style="font-size: 34px; color: #FF0000;">people_outline</span>
+        <h2 class="ibm-plex-mono-light" style="font-weight: 200; font-size: 34px !important;">Oops!, No Users are registered</h2>
+    </div>
+    {% endif %}
+    
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

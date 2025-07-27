@@ -1,0 +1,320 @@
+:root {
+    --page-title-margin-top: 2rem;
+    --page-title-margin-bottom: 7.32vh;
+    --form-container-gap: 3.8889vh;
+    --form-container-margin-bottom: 0;
+    --input-group-gap: 2.037vh;
+    --input-group-margin-bottom: 0;
+    --input-container-margin-bottom: 3vh;
+    --signup-text-margin-top: 4.95vh;
+}
+
+@media (max-width: 768px) {
+    :root {
+        --page-title-margin-top: 2rem;
+        --page-title-margin-bottom: 3vh;
+        --form-container-gap: 3.8889vh;
+        --form-container-margin-bottom: 0;
+        --input-group-gap: 2.037vh;
+        --input-group-margin-bottom: 0;
+    }
+}
+@media (max-width: 576px) {
+    :root {
+        --form-container-gap: 3.8889vh;
+        --form-container-margin-bottom: 0;
+        --input-group-gap: 2.037vh;
+        --input-group-margin-bottom: 0;
+        --page-title-margin-top: 1.5rem;
+        --page-title-margin-bottom: 2vh;
+    }
+}
+@media (max-height: 600px) {
+    :root {
+        --form-container-gap: 2.5vh;
+        --form-container-margin-bottom: 0;
+        --input-group-gap: 1.5vh;
+        --input-group-margin-bottom: 0;
+        --page-title-margin-top: 1rem;
+        --page-title-margin-bottom: 1.5vh;
+    }
+}
+body {
+            font-family: 'Inter', sans-serif;
+font-weight: 800;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: white;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    overflow-x: hidden;
+}
+.error-toast {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 500px;
+  background-color: #FFF9F9;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.success-toast {
+
+  background-color: #2ef477 !important;
+ 
+}
+
+button {
+    font-size: clamp(14px, 1.25vw, 24px);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    border: none;
+    border-radius: 0.625vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button:hover {
+    background-color: #333333 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.error-toast.hidden {
+  opacity: 0;
+  transform: translate(-50%, -20px);
+  pointer-events: none;
+}
+
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+}
+
+.toast-icon {
+  top: 0px;
+  position: relative;
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.toast-message {
+  flex-grow: 1;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  position: relative; 
+  top:-2px;
+  font-weight: 500;
+}
+
+.toast-close {
+  flex-shrink: 0;
+  cursor: pointer;
+  margin-left: 12px;
+}
+
+.toast-progress {
+  height: 4px;
+  width: 100%;
+  background-color: #f0f0f0;
+}
+
+.toast-progress-bar {
+  height: 100%;
+  width: 100%;
+  background-color: #FF3B30;
+  transition: width 5s linear;
+}
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 5;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.password-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  transform: translateY(-50%) !important;
+  box-shadow: none !important;
+}
+
+.password-toggle .toggle-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.char-counter {
+  position: absolute;
+  top: -25px;
+  right: 5px;
+  font-size: 14px;
+  color: #666;
+  font-family: 'IBM Plex Mono', monospace;
+}
+input[type="password"], input[type="text"] {
+  padding-right: 50px;
+}
+
+input {
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(2, 123, 229, 0.3);
+    background-color: #ffffff !important;
+}
+
+a {
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #025fad !important;
+    text-decoration: underline;
+}
+
+.side-image {
+    width: 55%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.side-container {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    box-sizing: border-box;
+}
+
+.page-title {
+    font-size: clamp(24px, 2.5vw, 48px);
+    text-align: center;
+    margin-top: var(--page-title-margin-top);
+    margin-bottom: var(--page-title-margin-bottom);
+}
+
+.form-container {
+    display: flex;
+    width: 100%;
+    max-width: 450px;
+    flex-direction: column;
+    gap: var(--form-container-gap);
+    margin-bottom: var(--form-container-margin-bottom);
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--input-group-gap);
+    width: 100%;
+    margin-bottom: var(--input-group-margin-bottom);
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: var(--input-container-margin-bottom, 0vh);
+}
+
+.input-field {
+    font-size: clamp(14px, 1.5625vw, 20px);
+    width: 100%;
+    height: 6.25vh;
+    padding-left: 50px;
+    padding-right: 1vw;
+    border-radius: 0.625rem;
+    border: none;
+    background-color: #f4f4f4;
+    box-sizing: border-box;
+}
+
+.input-icon {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 24px;
+    width: 24px;
+    pointer-events: none;
+}
+
+.form-label {
+    font-size: clamp(14px, 1.5625vw, 35px);
+}
+
+.login-button {
+    width: 100%;
+    height: 5.4vh;
+    background-color: black;
+    color: white;
+    font-size: clamp(14px, 1.25vw, 30px);
+    font-weight: 500;
+    border-radius: 0.625vw;
+    padding: 0 1vw;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signup-text {
+    font-size: clamp(14px, 1.12vw, 35px);
+    text-align: center;
+    color: rgba(0, 0, 0, 0.54);
+    margin-top: var(--signup-text-margin-top);
+}
+
+/* Progress bar styles */
+.progress-container {
+  width: 100%;
+  height: 10px;
+  background-color: rgba(200, 200, 200, 0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: #FF3B30; /* Default color - will be changed by JS */
+  transition: width 0.3s ease, background-color 0.5s ease;
+}
+
+/* Remove the progress text */
+.progress-text {
+  display: none;
+}

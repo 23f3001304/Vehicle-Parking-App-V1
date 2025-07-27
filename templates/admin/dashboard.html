@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/css/font.css" defer>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/toast.css">
+    <link rel="stylesheet" href="/static/css/parking_lot.css">
+    <link rel="shortcut icon" href="/static/svg/Icon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <img class="mobile" src="../static/svg/Icon.svg" alt="">
+    <div class="menu-overlay" id="menuOverlay"></div>
+    {% include 'components/notifications/toast.html' %}
+    
+    <div class="dashboard-container">
+        
+    {% include 'components/navigation/sidebar.html' %}     
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="rectangle"></div>
+                <h1>Parking Lots</h1>
+                <a href="/admin/add_lot"><button class="add-btn"><i class="fas fa-plus"></i>  <span>Add a parking lot</span></button></a>
+            </div>
+            
+            <div class="parking-lots-container">
+                {% for lot in parking_lots %}
+                <div class="parking-card">
+                    <div class="card-header">
+                        <div class="card-header-content">
+                            <h3>{{lot.location}}</h3>
+                            <div class="card-badges">
+                                <span class="occupancy-badge {% if (lot.capacity - lot.free) / lot.capacity > 0.8 %}high{% elif (lot.capacity - lot.free) / lot.capacity > 0.5 %}medium{% else %}low{% endif %}">
+                                    {% if (lot.capacity - lot.free) / lot.capacity > 0.8 %}High{% elif (lot.capacity - lot.free) / lot.capacity > 0.5 %}Medium{% else %}Low{% endif %} Occupancy
+                                </span>
+                            </div>
+                        </div>
+                        <a href="{{lot.edit_path}}"><button class="edit-btn" title="Edit parking lot"><i class="fas fa-edit"></i></button></a>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-section">
+                            <div class="info-row occupied-row">
+                                <span class="info-label"><i class="fas fa-car"></i> Occupied:</span>
+                                <div class="capacity-container">
+                                    <div class="capacity-bar">
+                                        <div class="capacity-fill {% if (lot.capacity - lot.free) / lot.capacity > 0.8 %}high-fill{% elif (lot.capacity - lot.free) / lot.capacity > 0.5 %}medium-fill{% else %}low-fill{% endif %}" 
+                                             style="width: {{ (lot.capacity - lot.free) / lot.capacity * 100 }}%;"></div>
+                                    </div>
+                                    <span class="value">{{lot.capacity - lot.free}}/{{lot.capacity}}</span>
+                                </div>
+                            </div>
+                            <div class="info-row highlight-row">
+                                <span class="info-label"><i class="fas fa-money-bill"></i> Price:</span>
+                                <span class="value price-tag">₹{{lot.price_per_hour|default('0')}}<span class="price-unit">/hr</span></span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-map-pin"></i> Pin code:</span>
+                                <span class="value">{{lot.pincode}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="action-buttons">
+                            <a href="{{lot.view_path}}" class="btn-link">
+                                <div class="card-btn view-btn">
+                                    <i class="fas fa-eye btn-icon"></i>
+                                    <span class="btn-text">View Spots</span>
+                                </div>
+                            </a>
+                            <a href="{{lot.delete_path}}" class="btn-link" onclick="return confirm('Are you sure you want to delete this parking lot?');">
+                                <div class="card-btn delete-btn">
+                                    <i class="fas fa-trash-alt btn-icon"></i>
+                                    <span class="btn-text">Delete</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% if not parking_lots or parking_lots|length == 0 %}
+    <div class ='No_Parking_Lot'
+    style = "position: fixed; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #FFF9F9;
+            z-index: -1; 
+            border-top: 1px black solid;
+            border-bottom: 1px black solid;
+            width: 100%;
+            gap:20px;
+            display: flex;
+            align-items: center;
+            justify-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-weight: 300;
+            z-index: 99;">
+        <span class="material-icons" style="font-size: 34px; color: #FF0000; ">warning_amber</span>
+        <h2 class="ibm-plex-mono-light" style="font-weight: 200; font-size: 34px !important;">Oops!, No Parking Lots are added</h2>
+    </div>
+    {% endif %}
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

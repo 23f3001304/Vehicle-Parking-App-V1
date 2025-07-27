@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="/static/css/sidebar.css">
+<div class="sidebar " id="sidebar">
+    <button class="toggle-btn" id="toggleSidebar" aria-label="Toggle sidebar">
+        <i>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 5L16 12L9 19" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </i>
+    </button>
+    <div class="sidebar-header">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="../static/svg/Icon.svg" class="logo-icon" alt="">
+            </div>
+            <div class="user-info">
+                <div class="full-name">Hemang Choudhary</div>
+                <div class="user-role">Administrator</div>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar-menu">
+        <ul>
+            <li class= {{ 'active' if request.path == '/admin/dashboard' else '' }}><a href="/admin/dashboard"><i class="fas fa-home"></i> <span>Home</span></a></li>
+            <li class= {{ 'active' if request.path == '/admin/users' else '' }}><a href="/admin/users"><i class="fas fa-users"></i> <span>Users</span></a></li>
+            <li class= {{ 'active' if request.path == '/admin/summary' else '' }}><a href="/admin/summary"><i class="material-icons">summarize</i> <span>Summary</span></a></li>
+            <li class= {{ 'active' if request.path == '/admin/search' else '' }}><a href="/admin/search"><i class="fas fa-search"></i> <span>Search</span></a></li>
+        </ul>
+    </div>
+    <div class="sidebar-footer">
+        <button class="logout-btn" >
+            <i class="material-icons">logout</i>
+            <span>Log Out</span>
+        </button>
+    </div>
+</div>
+<script src="/static/js/sidebar.js" defer></script>
+<script nonce="{{ csp_nonce }}">
+    document.getElementsByClassName('logout-btn')[0].addEventListener('click', function () {
+        window.location.href = '/logout';
+    });
+</script>

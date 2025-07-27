@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>{{lot.title}} - Overview</title>
+    <link rel="stylesheet" href="/static/css/toast.css">
+    <link rel="shortcut icon" href="/static/svg/Icon.svg" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f9fafb;
+            overflow-x: hidden;
+        }
+::-webkit-scrollbar {
+    width: 8px;
+    height: 5px !important;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f0f0; 
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #fdd835, #ffeb3b); /* yellow gradient */
+    border-radius: 10px;
+    height: 5px !important;
+    box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ffeb3b, #fdd835); /* invert gradient on hover */
+}
+
+        .main-container {
+            flex: 1;
+            width: 100%;
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 1536px) {
+            .main-container {
+                padding: 1.5rem 3rem;
+            }
+            .card-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 1.5rem;
+            }
+        }
+        
+        .parking-grid-container {
+            width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .parking-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            /* font-size: clamp(0.8rem, 5vw, 1rem) !important; 
+             */
+            gap: 12px;
+            width: 100%;
+        }
+        .spot-button {
+            aspect-ratio: 1/1;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 8px;
+            font-size: clamp(1rem, 0.8rem + 0.6vw, 1.25rem) !important; /* Fixed and increased font size */
+            font-weight: 700; /* Increased weight for better visibility */
+        }
+        .spot-button.occupied .material-icons {
+            font-size: clamp(1rem, 0.9rem + 0.7vw, 1.4rem); /* Increased icon size */
+        }
+
+        @media (max-width: 1200px) {
+            .parking-grid {
+                gap: 10px;
+            }
+        }
+        @media (max-width: 768px) {
+            .parking-grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 8px;
+            }
+            .spot-button {
+                font-size: clamp(0.9rem, 0.7rem + 0.6vw, 1.15rem) !important;
+            }
+            .spot-button.occupied .material-icons {
+                font-size: clamp(0.9rem, 0.8rem + 0.6vw, 1.2rem);
+            }
+        }
+        @media (max-width: 480px) {
+            .parking-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+            .spot-button {
+                font-size: 0.85rem !important; /* Increased from 0.65rem */
+            }
+            .spot-button.occupied .material-icons {
+                font-size: 0.95rem; /* Increased from 0.75rem */
+            }
+        }
+        
+        /* Rest of your styles */
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+        .dashboard-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section - Updated for better centering -->
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-10 relative">
+            <div class="w-full sm:w-1/3 mb-4 sm:mb-0 flex justify-start">
+                <button onclick="window.location.href='/admin/dashboard'" class="flex items-center text-sm bg-white hover:bg-gray-100 text-gray-700 py-2 px-4 rounded-full shadow-sm border border-gray-200 transition-colors duration-150">
+                    <span class="material-icons mr-2 text-base">arrow_back</span>
+                    Back to Dashboard
+                </button>
+            </div>
+            <h1 class="w-full sm:w-1/3 text-2xl md:text-3xl font-bold text-gray-800 text-center mb-4 sm:mb-0">{{lot.title}}</h1>
+            <div class="w-full sm:w-1/3 flex justify-end">
+               <a href="{{lot.edit_path}}"> 
+                <button class="text-gray-600 hover:text-gray-800 p-2 rounded-full hover:bg-gray-200 transition-colors duration-150">
+                    <span class="material-icons text-xl">edit</span>
+                </button>
+                </a>
+            </div>
+        </header>
+
+        <div class="card-grid mb-10">
+            <div class="dashboard-card bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center text-blue-600 mb-3">
+                    <span class="material-icons mr-2 text-xl">location_on</span>
+                    <h3 class="font-semibold text-gray-700">Address</h3>
+                </div>
+                <p class="text-gray-600 text-sm leading-relaxed">{{lot.address}}</p>
+            </div>            
+            <div class="dashboard-card bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center text-purple-600 mb-3">
+                    <span class="material-icons mr-2 text-xl">directions_car</span>
+                    <h3 class="font-semibold text-gray-700">Total Capacity</h3>
+                </div>
+                <p class="text-3xl font-bold text-gray-800">{{lot.capacity}} <span class="text-sm font-medium text-gray-500 ml-1">Vehicles</span></p>
+            </div>            
+            <div class="dashboard-card bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center text-green-500 mb-3">
+                        <span class="material-icons mr-2 text-xl">event_available</span>
+                        <h3 class="font-semibold text-gray-700">Current Availability</h3>
+                    </div>
+                    {% set occupancy_percent = ((lot.occupied) / lot.capacity) * 100 %}
+
+                    <div class="flex items-baseline mb-2">
+                        <p class="text-3xl font-bold {% if occupancy_percent < 50 %}
+                                text-green-500
+                            {% elif occupancy_percent < 80 %}
+                                text-yellow-500
+                            {% else %}
+                                text-red-500
+                            {% endif %}">{{lot.occupied}}</p>
+                        <p class="text-sm font-medium text-gray-500 ml-1.5">/ {{lot.capacity}} Spots</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="overflow-hidden h-2.5 mb-1 text-xs flex rounded-full bg-gray-100">
+                        <div class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center rounded-full animate-pulse-slow 
+                            {% if occupancy_percent < 50 %}
+                                bg-green-500
+                            {% elif occupancy_percent < 80 %}
+                                bg-yellow-500
+                            {% else %}
+                                bg-red-500
+                            {% endif %}"
+                            style="width:{{ occupancy_percent }}%">
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 text-right mt-2">
+                        {% if occupancy_percent < 50 %}
+                            <span class="text-green-600 font-medium mt-2">{{ occupancy_percent|round(1) }}%  </span> occupied
+                        {% elif occupancy_percent < 80 %}
+                            <span class="text-yellow-600 font-medium mt-2">{{ occupancy_percent|round(1) }}%</span> occupied 
+                        {% else %}
+                            <span class="text-red-600 font-medium mt-2">{{ occupancy_percent|round(1) }}%</span> occupied
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div class="dashboard-card bg-white p-5 rounded-xl shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div class="flex items-center text-indigo-600 mb-3">
+                    <span class="material-icons mr-2 text-xl">sell</span>
+                    <h3 class="font-semibold text-gray-700">Price Per Hour</h3>
+                </div>
+                <p class="text-3xl font-bold text-gray-800">₹ <span class="px-1">{{lot.price}}</span></p>
+            </div>            
+            <div class="dashboard-card bg-gradient-to-br from-teal-500 to-green-600 p-5 rounded-xl shadow-lg text-white">
+                <div class="flex items-center mb-3">
+                    <span class="material-icons mr-2 text-xl">payments</span>
+                    <h3 class="font-semibold">Collected Revenue</h3>
+                </div>
+                <p class="text-3xl font-bold">₹ <span class="px-1">{{lot.expected_revenue}}</span></p>
+                <p class="text-xs opacity-80 mt-1">Based on past reservations & rates</p>
+            </div>
+        </div>
+        <div class="bg-white p-5 sm:p-6 md:p-8 rounded-xl shadow-md border border-gray-100">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                <div class="mb-4 sm:mb-0">
+                    <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Parking Spot Overview</h2>
+                    <p class="text-sm text-gray-500 mt-1">Click a spot to view details about spots</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <span class="w-6 h-6 bg-blue-500 rounded-md mr-2 border border-blue-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">F</span>
+                        <span class="text-sm text-gray-600">Available</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-6 h-6 bg-red-500 rounded-md mr-2 border border-red-600 flex items-center justify-center text-white text-xs shadow-sm">
+                            <span class="material-icons text-sm">directions_car</span>
+                        </span>
+                        <span class="text-sm text-gray-600">Occupied</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-auto pb-2">
+                <div class="parking-grid-container flex justify-center">
+                    <div class="parking-grid">
+                        {% for spot in spots %}
+                        {% if spot.status == 0 %}
+                        <button class="aspect-square bg-blue-500 hover:bg-blue-600 text-white font-bold  rounded-md text-sm shadow-sm transition-all duration-150 ease-in-out flex items-center justify-center spot-button" spot_id="{{spot.uuid}}">F</button>
+                        {% else %}
+                        <button class="aspect-square bg-red-500 hover:bg-red-600 text-white rounded-md shadow-sm transition-all duration-150 ease-in-out flex items-center justify-center spot-button" spot_id="{{spot.uuid}}""> 
+                            <span class="material-icons" >directions_car</span>
+                        </button>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-6 flex justify-between items-center">
+            <div class="text-sm text-gray-500">
+                Showing All Parking Spots
+            </div>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm flex items-center transition-colors duration-150">
+                <span class="material-icons mr-1 text-sm">refresh</span>
+                Refresh Status
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function updateSpotSizes() {
+            const container = document.querySelector('.parking-grid-container');
+            const grid = document.querySelector('.parking-grid');
+            
+            const columns = window.innerWidth <= 480 ? 3 : 
+                           window.innerWidth <= 768 ? 6 : 12;
+            
+            const gap = window.innerWidth <= 480 ? 6 : 
+                       window.innerWidth <= 768 ? 8 : 12;
+            
+            grid.style.gap = `${gap}px`;
+            
+            document.querySelectorAll('.spot-button').forEach(spot => {
+               spot.addEventListener('click', function() {
+                    const spotId = this.getAttribute('spot_id');
+                    window.location.href = `/admin/${spotId}/view_spots`;
+                });
+            });
+        }
+        window.addEventListener('load', updateSpotSizes);
+        window.addEventListener('resize', updateSpotSizes);
+       
+    </script>
+</body>
+</html>

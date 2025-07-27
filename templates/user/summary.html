@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Summary - ParkEase</title>
+    <link rel="stylesheet" href="/static/css/font.css" defer>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="stylesheet" href="/static/css/user_summary.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/toast.css">
+    <link rel="shortcut icon" href="/static/svg/Icon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <img class="mobile" src="../static/svg/Icon.svg" alt="">
+    <div class="menu-overlay" id="menuOverlay"></div>
+    {% include 'components/notifications/toast.html' %}
+    
+    <div class="dashboard-container">
+        {% include 'components/navigation/user_sidebar.html' %}     
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="rectangle"></div>
+                <h1>My Parking Summary</h1>
+                <div class="user-greeting">
+                    <span>Welcome back, {{ user.FullName.split()[0] }}!</span>
+                </div>
+            </div>
+            
+            <!-- Overview Cards -->
+            <div class="summary-overview">
+                <div class="overview-card total-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="overview-content">
+                        <h3>{{ summary_data.total_reservations }}</h3>
+                        <p>Total Reservations</p>
+                        <span class="sub-info">Lifetime sessions</span>
+                    </div>
+                </div>
+                
+                <div class="overview-card active-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="overview-content">
+                        <h3>{{ summary_data.active_reservations_count }}</h3>
+                        <p>Active Parking</p>
+                        <span class="sub-info">Currently parked</span>
+                    </div>
+                </div>
+                
+                <div class="overview-card spent-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="overview-content">
+                        <h3>₹{{ summary_data.total_spent }}</h3>
+                        <p>Total Spent</p>
+                        <span class="sub-info">All time</span>
+                    </div>
+                </div>
+                
+                <div class="overview-card current-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="overview-content">
+                        <h3>₹{{ summary_data.current_spending }}</h3>
+                        <p>Current Session</p>
+                        <span class="sub-info">Ongoing cost</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Reservations -->
+            {% if summary_data.active_reservations %}
+            <div class="active-section">
+                <h2><i class="fas fa-car"></i> Active Parking Sessions</h2>
+                <div class="active-grid">
+                    {% for reservation in summary_data.active_reservations %}
+                    <div class="active-card">
+                        <div class="active-header">
+                            <div class="location-info">
+                                <h3>{{ reservation.location }}</h3>
+                                <span class="spot-number">Spot #{{ reservation.spot_number }}</span>
+                            </div>
+                            <div class="status-badge active">
+                                <i class="fas fa-circle"></i>
+                                <span>Active</span>
+                            </div>
+                        </div>
+                        <div class="active-details">
+                            <div class="detail-row">
+                                <span class="label">Vehicle:</span>
+                                <span class="value">{{ reservation.vehicle_number }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Started:</span>
+                                <span class="value">{{ reservation.start_time }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Rate:</span>
+                                <span class="value">₹{{ reservation.price_per_hour }}/hour</span>
+                            </div>
+                            <div class="detail-row cost-row">
+                                <span class="label">Current Cost:</span>
+                                <span class="value cost">₹{{ reservation.current_cost }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Statistics Grid -->
+            <div class="statistics-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Favorite Parking Spots</h3>
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-content">
+                        {% for lot in summary_data.favorite_lots[:5] %}
+                        <div class="favorite-item">
+                            <div class="favorite-info">
+                                <span class="location-name">{{ lot.location }}</span>
+                                <span class="usage-count">{{ lot.count }} visits</span>
+                            </div>
+                            <div class="favorite-bar">
+                                <div class="favorite-fill" style="width: {{ (lot.count / summary_data.favorite_lots[0].count * 100) | round(1) }}%"></div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="no-data">
+                            <i class="fas fa-info-circle"></i>
+                            <p>No parking history yet</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Parking Statistics</h3>
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">Most Used Location</span>
+                                <span class="stat-value">{{ summary_data.parking_stats.most_used_location }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Times Visited</span>
+                                <span class="stat-value">{{ summary_data.parking_stats.most_used_count }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Avg. Cost/Session</span>
+                                <span class="stat-value">₹{{ summary_data.parking_stats.average_cost_per_session }}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Total Sessions</span>
+                                <span class="stat-value">{{ summary_data.parking_stats.total_parking_sessions }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card chart-card">
+                    <div class="stat-header">
+                        <h3>Usage by Location</h3>
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="stat-content">
+                        {% if summary_data.favorite_lots %}
+                        <div id="usageChart"></div>
+                        {% else %}
+                        <div class="no-data">
+                            <i class="fas fa-chart-pie"></i>
+                            <p>No usage data available</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Recent Activity</h3>
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="activity-list">
+                            {% for activity in summary_data.recent_activities[:5] %}
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas {{ activity.icon }}"></i>
+                                </div>
+                                <div class="activity-info">
+                                    <div class="activity-main">
+                                        <span class="location">{{ activity.location }}</span>
+                                        <span class="spot">Spot #{{ activity.spot_number }}</span>
+                                    </div>
+                                    <div class="activity-details">
+                                        <span class="vehicle">{{ activity.vehicle_number }}</span>
+                                        <span class="cost">₹{{ activity.cost }}</span>
+                                    </div>
+                                    <div class="activity-time">{{ activity.start_time }}</div>
+                                </div>
+                                <div class="activity-status">
+                                    <span class="status-badge {{ activity.status.lower() }}">
+                                        {{ activity.status }}
+                                    </span>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="no-data">
+                                <i class="fas fa-info-circle"></i>
+                                <p>No recent activity</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions-section">
+                <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+                <div class="quick-actions-grid">
+                    <a href="/dashboard" class="quick-action-btn primary">
+                        <i class="fas fa-search"></i>
+                        <span>Find Parking</span>
+                    </a>
+                    {% if summary_data.active_reservations_count > 0 %}
+                    <button class="quick-action-btn secondary" onclick="refreshCosts()">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Refresh Costs</span>
+                    </button>
+                    {% endif %}
+                    <a href="/dashboard" class="quick-action-btn tertiary">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/sidebar.js" defer></script>
+    <script src="/static/js/user_summary.js" defer></script>
+    <script>
+        // Pass data to JavaScript
+        const summaryData = {
+            usageData: {
+                labels: {{ summary_data.spending_chart_data.labels | tojson }},
+                data: {{ summary_data.spending_chart_data.data | tojson }}
+            }
+        };
+    </script>
+</body>
+</html>

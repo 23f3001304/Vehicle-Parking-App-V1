@@ -1,0 +1,7 @@
+flask
+flask-login
+sqlalchemy
+werkzeug
+flask-talisman
+flask-limiter>=3.0.0
+python-dotenv

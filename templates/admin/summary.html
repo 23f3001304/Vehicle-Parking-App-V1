@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Summary - ParkEase</title>
+    <link rel="stylesheet" href="/static/css/font.css" defer>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="stylesheet" href="/static/css/summary_simple.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/toast.css">
+    <link rel="shortcut icon" href="/static/svg/Icon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <img class="mobile" src="../static/svg/Icon.svg" alt="">
+    <div class="menu-overlay" id="menuOverlay"></div>
+    {% include 'components/notifications/toast.html' %}
+    
+    <div class="dashboard-container">
+        {% include 'components/navigation/sidebar.html' %}     
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="rectangle"></div>
+                <h1>System Summary</h1>
+                <button class="refresh-btn" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+            
+            <!-- Overview Cards -->
+            <div class="summary-overview">
+                <div class="overview-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="overview-content">
+                        <h3>{{ summary_data.total_lots }}</h3>
+                        <p>Total Parking Lots</p>
+                    </div>
+                </div>
+                
+                <div class="overview-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-square-parking"></i>
+                    </div>
+                    <div class="overview-content">
+                        <h3>{{ summary_data.total_spots }}</h3>
+                        <p>Total Parking Spots</p>
+                        <span class="availability">{{ summary_data.available_spots }} available</span>
+                    </div>
+                </div>
+                
+                <div class="overview-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="overview-content">
+                        <h3>{{ summary_data.total_users }}</h3>
+                        <p>Registered Users</p>
+                    </div>
+                </div>
+                
+                <div class="overview-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="overview-content">
+                        <h3>{{ summary_data.total_reservations }}</h3>
+                        <p>Total Reservations</p>
+                        <span class="active">{{ summary_data.active_reservations }} active</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Occupancy Rate by Parking Lot</h3>
+                    </div>
+                    <div id="occupancyChart"></div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Revenue by Parking Lot</h3>
+                    </div>
+                    <div id="revenueChart"></div>
+                </div>
+            </div>
+
+            <!-- Detailed Statistics -->
+            <div class="statistics-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Top Performing Lots</h3>
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-content">
+                        {% for lot in summary_data.top_lots %}
+                        <div class="stat-item">
+                            <div class="stat-item-info">
+                                <span class="stat-name">{{ lot.location }}</span>
+                                <span class="stat-value">₹{{ lot.revenue | round(2) }}</span>
+                            </div>
+                            <div class="stat-bar">
+                                <div class="stat-fill" style="width: {{ (lot.revenue / summary_data.max_revenue * 100) | round(1) }}%"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Recent Activity</h3>
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        {% for activity in summary_data.recent_activities %}
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas {{ activity.icon }}"></i>
+                            </div>
+                            <div class="activity-info">
+                                <span class="activity-text">{{ activity.text }}</span>
+                                <span class="activity-time">{{ activity.time }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>System Health</h3>
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="health-item">
+                            <span class="health-label">Overall Occupancy</span>
+                            <span class="health-value">{{ summary_data.overall_occupancy }}%</span>
+                        </div>
+                        <div class="health-item">
+                            <span class="health-label">Active Reservations</span>
+                            <span class="health-value">{{ summary_data.active_reservations }}</span>
+                        </div>
+                        <div class="health-item">
+                            <span class="health-label">Available Spots</span>
+                            <span class="health-value">{{ summary_data.available_spots }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <h3>Quick Actions</h3>
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="quick-actions">
+                            <a href="/admin/add_lot" class="quick-action-btn">
+                                <i class="fas fa-plus"></i>
+                                <span>Add New Lot</span>
+                            </a>
+                            <a href="/admin/users" class="quick-action-btn">
+                                <i class="fas fa-users"></i>
+                                <span>Manage Users</span>
+                            </a>
+                            <a href="/admin/dashboard" class="quick-action-btn">
+                                <i class="fas fa-home"></i>
+                                <span>Dashboard</span>
+                            </a>
+                            <button onclick="refreshData()" class="quick-action-btn">
+                                <i class="fas fa-sync-alt"></i>
+                                <span>Refresh Data</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/sidebar.js" defer></script>
+    <script src="/static/js/summary_simple.js" defer></script>
+    <script>
+        const summaryData = {
+            occupancyData: {{ summary_data.occupancy_chart_data | tojson }},
+            revenueData: {{ summary_data.revenue_chart_data | tojson }}
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script src="/static/utils/password.js" defer ></script>
+    <script src="/static/utils/pincode.js" defer></script>
+    <script src="/static/utils/formValidate.js" defer></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Oswald&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="shortcut icon"
+      href="/static/svg/Icon.svg"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="/static/css/font.css" />
+    <link rel="stylesheet" href="/static/css/forms/auth/login.css" />
+    <link rel="stylesheet" href="/static/css/forms/common.css" />
+    <title>Login - ParkEase</title>
+  </head>
+  <body>
+  {% include 'components/notifications/toast.html' %}
+    <img
+      src="{{ url_for('static', filename='/images/Log_sidebar.png') }}"
+      alt="ParkEase_login"
+      class="side-image"
+    />
+    <div class="side-container">
+      <h1 class="roboto-bold page-title">Sign in to ParkEase</h1>
+      <form
+        action="{{ url_for('login') }}"
+        method="POST"
+        class="form-container"
+        autocomplete="off"
+        id = "loginForm"
+      >
+       <input type="hidden" name="form_token" value="{{ form_token }}">
+        <div class="input-group">
+          <label for="username" class="ibm-plex-mono-regular form-label"
+            >EMAIL</label
+          >
+          <div class="input-container">
+            <input
+              autofocus
+              type="text"
+              id="username"
+              name="username"
+              class="ibm-plex-mono-regular input-field"
+              autocomplete="username"
+              placeholder="mail@domain.com"
+            />
+            <svg
+              class="input-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4 20C3.45 20 2.97917 19.8042 2.5875 19.4125C2.19583 19.0208 2 18.55 2 18V6C2 5.45 2.19583 4.97917 2.5875 4.5875C2.97917 4.19583 3.45 4 4 4H20C20.55 4 21.0208 4.19583 21.4125 4.5875C21.8042 4.97917 22 5.45 22 6V18C22 18.55 21.8042 19.0208 21.4125 19.4125C21.0208 19.8042 20.55 20 20 20H4ZM12 13L4 8V18H20V8L12 13ZM12 11L20 6H4L12 11ZM4 8V6V18V8Z"
+                fill="#1D1B20"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="password" class="ibm-plex-mono-regular form-label"
+            >PASSWORD</label
+          >
+          <div class="input-container">
+            <div class="char-counter"><span id="charCount">0</span>/8</div>
+
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="ibm-plex-mono-regular input-field"
+              title="Password must be exactly 8 characters"
+              maxlength="8"
+              placeholder="••••••••"
+            />
+            <svg
+              class="input-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.23047 9H7.2002C6.08009 9 5.51962 9 5.0918 9.21799C4.71547 9.40973 4.40973 9.71547 4.21799 10.0918C4 10.5196 4 11.0801 4 12.2002V17.8002C4 18.9203 4 19.4801 4.21799 19.9079C4.40973 20.2842 4.71547 20.5905 5.0918 20.7822C5.5192 21 6.07902 21 7.19694 21H16.8031C17.921 21 18.48 21 18.9074 20.7822C19.2837 20.5905 19.5905 20.2842 19.7822 19.9079C20 19.4805 20 18.9215 20 17.8036V12.1969C20 11.079 20 10.5192 19.7822 10.0918C19.5905 9.71547 19.2837 9.40973 18.9074 9.21799C18.4796 9 17.9203 9 16.8002 9H14.7689M9.23047 9H14.7689M9.23047 9C9.10302 9 9 8.89668 9 8.76923V6C9 4.34315 10.3431 3 12 3C13.6569 3 15 4.34315 15 6V8.76923C15 8.89668 14.8964 9 14.7689 9"
+                stroke="#1D1B20"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none"
+              />
+            </svg>
+
+            <button
+              type="button"
+              id="togglePassword"
+              class="password-toggle"
+              aria-label="Show password"
+            >
+              <svg
+                class="toggle-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 5C7 5 2.73 8.11 1 12.5C2.73 16.89 7 20 12 20C17 20 21.27 16.89 23 12.5C21.27 8.11 17 5 12 5ZM12 17.5C9.24 17.5 7 15.26 7 12.5C7 9.74 9.24 7.5 12 7.5C14.76 7.5 17 9.74 17 12.5C17 15.26 14.76 17.5 12 17.5ZM12 9.5C10.34 9.5 9 10.84 9 12.5C9 14.16 10.34 15.5 12 15.5C13.66 15.5 15 14.16 15 12.5C15 10.84 13.66 9.5 12 9.5Z"
+                  fill="#1D1B20"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <button type="submit" class="login-button">LOG IN</button>
+        </div>
+      </form>
+
+      <p class="ibm-plex-mono-regular signup-text">
+        No account? <a href="/signup" style="color: #027be5">Create one</a>
+      </p>
+    </div>
+    <script src = "/static/js/login.js"></script>
+  </body>
+</html>

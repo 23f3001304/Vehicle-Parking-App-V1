@@ -1,0 +1,49 @@
+@media (max-width: 768px) {
+    .side-image {
+        display: none;
+    }
+
+    .side-container {
+        width: 100% !important;
+    }
+
+    .form-container {
+        gap: 3.8889vh;
+        max-width: 500px;
+    }
+
+    .input-group {
+        gap: 2.037vh;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-container {
+        gap: 3.8889vh;
+    }
+
+    .input-group {
+        gap: 2.037vh;
+    }
+
+    .input-field,
+    .login-button {
+        height: 6.25vh;
+    }
+}
+
+
+@media (max-height: 600px) {
+    .form-container {
+        gap: 2.5vh;
+    }
+
+    .input-group {
+        gap: 1.5vh;
+    }
+
+    .input-field,
+    .login-button {
+        height: 5vh;
+    }
+}

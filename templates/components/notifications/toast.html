@@ -1,0 +1,86 @@
+<link rel="stylesheet" href="/static/css/toast.css">
+<link rel="stylesheet" href="/static/css/font.css">
+<div id="errorToast"
+      class="error-toast  {% if toast %} visible {% else %} hidden {% endif %}"
+    >
+      <div class="toast-content">
+        <div class="toast-icon">
+        
+          <svg
+          {% if success_message %}
+            style="display: none;"
+          {% endif %}
+          style="display: block;"
+            width="28"
+            height="28"
+            viewBox="0 0 70 70"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M35 26.2502V37.9168M12.7718 44.3329C10.1193 48.9272 8.79342 51.2252 8.99154 53.1102C9.16435 54.7544 10.0273 56.2481 11.3647 57.2198C12.8976 58.3335 15.5485 58.3335 20.8499 58.3335H49.1501C54.4515 58.3335 57.102 58.3335 58.6348 57.2198C59.9723 56.2481 60.8357 54.7544 61.0085 53.1102C61.2066 51.2252 59.8811 48.9272 57.2286 44.3329L43.0835 19.8329C40.431 15.2387 39.1041 12.9419 37.3726 12.171C35.8624 11.4986 34.1367 11.4986 32.6264 12.171C30.8956 12.9416 29.5696 15.2383 26.9193 19.8288L12.7718 44.3329ZM35.1481 46.6668V46.9585L34.8547 46.9591V46.6668H35.1481Z"
+              stroke="#FF0000"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          {% if success_message %}
+          <svg
+            id = "success_svg"
+            
+            width="28"
+            height="28"
+            viewBox="0 0 28 28"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="14" cy="14" r="14" fill="#E6F9EC" />
+            <path
+              d="M9.5 14.5L12.5 17.5L18.5 11.5"
+              stroke="#2ECC71"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          {% endif %}
+        </div>
+        <div class="toast-message" id="errorMessage">
+          {% if alert_message %} {{ alert_message }} {% endif %} {% if
+          success_message %} {{ success_message }} {% endif %}
+        </div>
+        <div class="toast-close" id="closeToast">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6L6 18M6 6L18 18"
+              stroke="black"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </div>
+      <div class="toast-progress">
+        <div
+          class="toast-progress-bar  {%
+          if
+          success_message
+          %}
+          success-toast
+          {%
+          endif
+          %}"
+          id="progressBar"
+         
+        ></div>
+      </div>
+</div>
+<script src="/static/utils/toast.js" defer></script>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="/static/utils/password.js" defer></script>
+    <script src="/static/utils/pincode.js" defer></script>
+    <script src="/static/utils/formValidate.js" defer></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Oswald&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="shortcut icon" href="/static/svg/Icon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/font.css">
+    <link rel="stylesheet" href="/static/css/forms/auth/signup.css">
+    <link rel="stylesheet" href="/static/css/forms/common.css">
+    <title>{{ Page_title }} - ParkEase</title>
+</head>
+<body>
+    {% include 'components/notifications/toast.html' %}
+    
+    <div class="progress-container">
+        <div class="progress-bar" id="form-progress"></div>
+    </div>
+
+    <img src="{{ image_path }}" alt="ParkEase_signup" class="side-image">
+    <div class="side-container">
+        <h1 class="roboto-bold page-title">{{ Page_title1 }}</h1>
+        <form action="{{ url }}" method="POST" id="signupForm" class="form-container" autocomplete="off">
+            <input type="hidden" name="form_token" value="{{ form_token }}">
+            
+            {% for field in fields %}
+                {% set first = loop.first %}
+                <div class="input-group">
+                    <label for="{{ field.name }}" class="ibm-plex-mono-regular form-label">{{ field.label }}</label>
+                    <div class="input-container">
+                        {% if field.name == 'password' %}
+                        <div class="char-counter">
+                            <span id="charCount">0</span>/8 | 
+                            <span id="strengthText" class="password-strength-text">Weak</span>
+                        </div>
+                        {% elif field.name == 'pincode' %}
+                        <div class="char-counter">
+                            <span id="pincodeCount">0</span>/6
+                        </div>
+                        {% endif %}
+                        <input 
+                            type="{{ field.type }}" 
+                            id="{{ field.name }}" 
+                            name="{{ field.name }}"
+                            class="ibm-plex-mono-regular input-field"
+                            autocomplete="off" 
+                            {% if first %}autofocus{% endif %} 
+                            {% if field.name=='password' %}
+                            title="Password must be exactly 8 characters" 
+                            maxlength="8" 
+                            {% endif %}
+                            {% if field.name=='pincode' %}
+                            title="Pincode must be exactly 6 digits" 
+                            maxlength="6" 
+                            inputmode="numeric"
+                            onkeypress="return isNumberKey(event)"
+                            {% endif %}
+                            placeholder="{{ field.placeholder }}"
+                        />
+                        {% if icon_map.get(field.icon) %}
+                        <img class="input-icon" src="{{ url_for('static', filename=icon_map.get(field.icon)) }}" alt="{{ field.icon }} icon" />
+                        {% endif %}
+                        
+                        {% if field.name == 'password' %}
+                        <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password">
+                            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 5C7 5 2.73 8.11 1 12.5C2.73 16.89 7 20 12 20C17 20 21.27 16.89 23 12.5C21.27 8.11 17 5 12 5ZM12 17.5C9.24 17.5 7 15.26 7 12.5C7 9.74 9.24 7.5 12 7.5C14.76 7.5 17 9.74 17 12.5C17 15.26 14.76 17.5 12 17.5ZM12 9.5C10.34 9.5 9 10.84 9 12.5C9 14.16 10.34 15.5 12 15.5C13.66 15.5 15 14.16 15 12.5C15 10.84 13.66 9.5 12 9.5Z" fill="#1D1B20" />
+                            </svg>
+                        </button>
+                        <div class="password-strength-container">
+                            <div class="password-strength-indicator" id="passwordStrengthIndicator"></div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="input-group">
+                <button type="submit" id="{{ button_id }}" class="{{ button_class }}">{{ button_text }}</button>
+            </div>
+        </form>
+        
+        <p class="ibm-plex-mono-regular signup-text">
+            Already have an Account?
+            <a href="/login" style="color: #027be5">Login</a>
+        </p>
+    </div>
+    
+    <script src="/static/utils/toast.js"></script>
+    <script src="/static/js/signup.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('#signupForm');
+            const inputs = form.querySelectorAll('input:not([type="hidden"])');
+            const progressBar = document.getElementById('form-progress');
+            
+            function updateProgress() {
+                let filledInputs = 0;
+                inputs.forEach(input => {
+                    if (input.value.trim() !== '') {
+                        filledInputs++;
+                    }
+                });
+                
+                const progressPercentage = Math.round((filledInputs / inputs.length) * 100);
+                progressBar.style.width = progressPercentage + '%';
+                
+                if (progressPercentage < 25) {
+                    progressBar.style.backgroundColor = '#FF3B30'; 
+                } else if (progressPercentage < 50) {
+                    progressBar.style.backgroundColor = '#FF9500'; 
+                } else if (progressPercentage < 75) {
+                    progressBar.style.backgroundColor = '#FFCC00';
+                } else {
+                    progressBar.style.backgroundColor = '#34C759'; 
+                }
+            }
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', updateProgress);
+            });
+            
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

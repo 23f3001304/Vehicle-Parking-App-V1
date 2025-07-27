@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Oswald&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="shortcut icon" href="/static/svg/Icon.svg" type="image/x-icon" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+{% if type == 'view_reservation' %}
+   <script src="/static/utils/ajaxfetch.js" defer></script>
+   {% endif %}
+  <link rel="stylesheet" href="/static/css/font.css" />
+  <link rel="stylesheet" href="/static/css/forms/common.css" />
+  <link rel="stylesheet" href="/static/css/forms/auth/signup.css" />
+  
+  <script src="/static/utils/password.js" defer ></script>
+  <script src="/static/utils/pincode.js" defer></script>
+  <script src="/static/utils/formValidate.js" defer></script>
+  <style>
+
+  </style>
+  <title>{{Page_title}} - ParkEase</title>
+</head>
+
+<body>
+  {% include 'components/notifications/toast.html' %}
+
+  <div class="progress-container">
+    <div class="progress-bar" id="form-progress"></div>
+  </div>
+
+  <img src="{{ image_path}}" alt="ParkEase_login" class="side-image" />
+  <div class="side-container">
+    {% if type == 'signup' %}
+    <h1 class="roboto-bold page-title" {% if type != 'signup' %} style=" margin-bottom: .4vw;" {% endif %} >{{ Page_title1 }}</h1>
+    {% endif %}
+    <form action="{{ url }}" method="POST" id="{{type}}form"  class="form-container" autocomplete="off">
+     {% if type != 'signup' %} 
+    <h1 class="roboto-bold page-title" {% if type != 'signup' %} style=" margin-bottom: 0vw; align-self: flex-start; text-align: left;" {% endif %} >{{ Page_title1 }}</h1>
+    {% if type == 'parking_spot' %}
+    <p  style="margin-top: 0vw;"> Delete Slot or View details such as ID, slot number, and current status. If a slot is occupied, click the 'More Details' button to see additional information.</p>
+    {% endif %}
+    {% if type == 'view_reservation' %}
+    <p style="margin-top: 0vw;">Access comprehensive details including Slot ID, Customer ID, Vehicle Number, and the estimated cost for the reservation.</p>
+    {% endif %}
+    {% endif %}
+    {% set ns = namespace(button_2=False) %}
+
+       <input type="hidden" name="form_token" value="{{ form_token }}">
+    {% for field in fields %}
+    {% set field = field %}
+
+    {% set first = loop.first %}
+    {% if field.value == 'Occupied' %}
+        {% set ns.button_2 = True %}
+    {% endif %}
+     {% include 'components/input.html' %}
+    {% endfor %}
+    {% if ns.button_2 %}
+            <a href="{{reservation_path}}">
+                <button  type="button" {% if type != 'signup' %} style="margin-top: 4vh; background-color: #DC2626;" {% endif %}  class="{{ button_class }}">
+                  More Details
+        </button>
+        </a>
+    {% endif %}    
+
+    {% if type != "view_reservation" %}
+      <div class="input-group">
+        <button type="submit" id="{{button_id}}" {% if type != 'signup' %} style="margin-top: 4vh;" {% endif %}  class="{{ button_class }}">
+          {{ button_text }}
+        </button>
+      </div>
+    {% endif %}
+    </form>
+    {% if type != 'signup' %}
+        <a href="{{ back_link }}"><button id="go_back">
+          <span class="material-icons">arrow_back</span>
+          <span>Go Back</span>
+        </button>
+        </a>
+      {% endif %}
+    {% if type == 'signup' %}
+    <p class="ibm-plex-mono-regular signup-text"
+>
+      Already have an Account?
+      <a href="/login" style="color: #027be5">Login</a>
+    </p>
+    {% endif %}
+  </div>
+  <script src="/static/utils/toast.js"></script>
+  <script src="{{ url_for('static', filename='js/' + type + '.js') }}"></script>
+  
+<script>
+      document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('#{{type}}form');
+      const inputs = form.querySelectorAll('input:not([type="hidden"]), select, textarea');
+      const progressBar = document.getElementById('form-progress');
+      
+      function updateProgress() {
+        let filledInputs = 0;
+        inputs.forEach(input => {
+          if (input.value.trim() !== '') {
+            filledInputs++;
+          }
+        });
+        
+        const progressPercentage = Math.round((filledInputs / inputs.length) * 100);
+        progressBar.style.width = progressPercentage + '%';
+        
+
+        if (progressPercentage < 25) {
+          progressBar.style.backgroundColor = '#FF3B30'; 
+        } else if (progressPercentage < 50) {
+          progressBar.style.backgroundColor = '#FF9500'; 
+        } else if (progressPercentage < 75) {
+          progressBar.style.backgroundColor = '#FFCC00'; 
+        } else {
+          progressBar.style.backgroundColor = '#34C759'; 
+        }
+      }
+      
+      inputs.forEach(input => {
+        input.addEventListener('input', updateProgress);
+      });
+      
+      updateProgress();
+    });
+</script>
+</body>
+
+</html>

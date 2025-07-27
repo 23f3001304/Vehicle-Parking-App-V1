@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - ParkEase Admin</title>
+    <link rel="stylesheet" href="/static/css/font.css" defer>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="stylesheet" href="/static/css/search.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/toast.css">
+    <link rel="shortcut icon" href="/static/svg/Icon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <img class="mobile" src="../static/svg/Icon.svg" alt="">
+    <div class="menu-overlay" id="menuOverlay"></div>
+    {% include 'components/notifications/toast.html' %}
+    
+    <div class="dashboard-container">
+        {% include 'components/navigation/sidebar.html' %}     
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="rectangle"></div>
+                <h1>Universal Search</h1>
+            </div>
+            
+            <!-- Search Form -->
+            <div class="search-section">
+                <form method="GET" action="/admin/search" class="search-form">
+                    <div class="search-input-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input 
+                            type="text" 
+                            name="q" 
+                            value="{{ search_query }}" 
+                            placeholder="Search parking lots, users, reservations, or spots..."
+                            class="search-input"
+                            autocomplete="off"
+                        >
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                            <span>Search</span>
+                        </button>
+                    </div>
+                </form>
+                
+                {% if search_query %}
+                <div class="search-info">
+                    <p>Search results for: <strong>"{{ search_query }}"</strong></p>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if search_query and search_results %}
+            <!-- Search Results -->
+            <div class="search-results">
+                
+                <!-- Parking Lots Results -->
+                {% if search_results.parking_lots %}
+                <div class="result-section">
+                    <h2>
+                        <i class="fas fa-building"></i>
+                        Parking Lots ({{ search_results.parking_lots|length }})
+                    </h2>
+                    <div class="result-grid">
+                        {% for lot in search_results.parking_lots %}
+                        <div class="result-card lot-card">
+                            <div class="card-header">
+                                <h3>{{ lot.location }}</h3>
+                                <div class="card-actions">
+                                    <a href="{{ lot.view_url }}" class="action-btn view-btn" title="View Spots">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ lot.edit_url }}" class="action-btn edit-btn" title="Edit Lot">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="info-row">
+                                    <span class="label">Capacity:</span>
+                                    <span class="value">{{ lot.capacity }} spots</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Available:</span>
+                                    <span class="value">{{ lot.free_spots }} spots</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Price:</span>
+                                    <span class="value">₹{{ lot.price_per_hour }}/hour</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Revenue:</span>
+                                    <span class="value">₹{{ lot.revenue }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">PIN Code:</span>
+                                    <span class="value">{{ lot.pincode }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Users Results -->
+                {% if search_results.users %}
+                <div class="result-section">
+                    <h2>
+                        <i class="fas fa-users"></i>
+                        Users ({{ search_results.users|length }})
+                    </h2>
+                    <div class="result-grid">
+                        {% for user in search_results.users %}
+                        <div class="result-card user-card">
+                            <div class="card-header">
+                                <h3>{{ user.name }}</h3>
+                                <div class="user-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="info-row">
+                                    <span class="label">Email:</span>
+                                    <span class="value">{{ user.email }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Address:</span>
+                                    <span class="value">{{ user.address or 'N/A' }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Reservations:</span>
+                                    <span class="value">{{ user.reservation_count }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Reservations Results -->
+                {% if search_results.reservations %}
+                <div class="result-section">
+                    <h2>
+                        <i class="fas fa-calendar-check"></i>
+                        Reservations ({{ search_results.reservations|length }})
+                    </h2>
+                    <div class="result-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Location</th>
+                                    <th>Spot</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Status</th>
+                                    <th>Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reservation in search_results.reservations %}
+                                <tr>
+                                    <td>
+                                        <div class="user-info">
+                                            <strong>{{ reservation.user_name }}</strong>
+                                            <small>{{ reservation.user_email }}</small>
+                                        </div>
+                                    </td>
+                                    <td>{{ reservation.lot_location }}</td>
+                                    <td>{{ reservation.spot_number }}</td>
+                                    <td>{{ reservation.start_time if reservation.start_time else 'N/A' }}</td>
+                                    <td>{{ reservation.end_time if reservation.end_time else 'Ongoing' }}</td>
+                                    <td>
+                                        <span class="status-badge {% if reservation.status == 'Active' %}active{% else %}completed{% endif %}">
+                                            {{ reservation.status }}
+                                        </span>
+                                    </td>
+                                    <td>₹{{ reservation.total_cost }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Parking Spots Results -->
+                {% if search_results.parking_spots %}
+                <div class="result-section">
+                    <h2>
+                        <i class="fas fa-square-parking"></i>
+                        Parking Spots ({{ search_results.parking_spots|length }})
+                    </h2>
+                    <div class="result-grid">
+                        {% for spot in search_results.parking_spots %}
+                        <div class="result-card spot-card">
+                            <div class="card-header">
+                                <h3>Spot {{ spot.spot_number }}</h3>
+                                <div class="spot-status {% if spot.is_occupied %}occupied{% else %}available{% endif %}">
+                                    <i class="fas {% if spot.is_occupied %}fa-car{% else %}fa-square-parking{% endif %}"></i>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <div class="info-row">
+                                    <span class="label">Location:</span>
+                                    <span class="value">{{ spot.lot_location }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Status:</span>
+                                    <span class="value">{% if spot.is_occupied %}Occupied{% else %}Available{% endif %}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Current Cost:</span>
+                                    <span class="value">₹{{ spot.current_cost }}</span>
+                                </div>
+                                <div class="card-actions">
+                                    <a href="{{ spot.view_url }}" class="action-btn view-btn">
+                                        <i class="fas fa-eye"></i>
+                                        <span>View Details</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- No Results -->
+                {% if not search_results.parking_lots and not search_results.users and not search_results.reservations and not search_results.parking_spots %}
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <h3>No results found</h3>
+                    <p>Try adjusting your search terms or search for something else.</p>
+                </div>
+                {% endif %}
+            </div>
+            {% elif search_query %}
+            <div class="no-results">
+                <i class="fas fa-search"></i>
+                <h3>No results found</h3>
+                <p>Try adjusting your search terms or search for something else.</p>
+            </div>
+            {% else %}
+            <!-- Search Instructions -->
+            <div class="search-instructions">
+                <div class="instruction-card">
+                    <i class="fas fa-info-circle"></i>
+                    <h3>Universal Search</h3>
+                    <p>Search across all your parking management data:</p>
+                    <ul>
+                        <li><strong>Parking Lots:</strong> Search by location or PIN code</li>
+                        <li><strong>Users:</strong> Search by name, email, or address</li>
+                        <li><strong>Reservations:</strong> Search by user details, location, or spot number</li>
+                        <li><strong>Parking Spots:</strong> Search by spot number or location</li>
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="/static/js/sidebar.js" defer></script>
+    <script src="/static/js/search.js" defer></script>
+</body>
+</html>
