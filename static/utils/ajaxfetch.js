@@ -26,9 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const currentMainContent = extractMainContent(currentContent);
             
             if (fetchedMainContent !== currentMainContent) {
-                console.log("Content change detected, updating page...");
-                console.log("Old content:", currentMainContent);
-                console.log("New content:", fetchedMainContent);
                 updateDynamicElements(html);
                 console.log(html);
                 currentContent = html;
